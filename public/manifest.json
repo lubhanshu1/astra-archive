@@ -1,0 +1,16 @@
+{
+    "name": "ASTRA Archive",
+    "short_name": "ASTRA",
+    "description": "An interactive digital museum of real spacecraft, rockets, and landers.",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#020617",
+    "theme_color": "#06b6d4",
+    "icons": [
+        {
+            "src": "/favicon.ico",
+            "sizes": "any",
+            "type": "image/x-icon"
+        }
+    ]
+}

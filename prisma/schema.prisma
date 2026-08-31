@@ -1,0 +1,75 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum VerificationState {
+  VERIFIED
+  DERIVED
+  DATA_UNAVAILABLE
+}
+
+model Artifact {
+  id               String            @id @default(uuid())
+  slug             String            @unique
+  name             String
+  category         String
+  organization     String            @default("DATA_UNAVAILABLE")
+  country          String            @default("DATA_UNAVAILABLE")
+  year             Int?
+  status           String            @default("DATA_UNAVAILABLE")
+  description      String
+  
+  // Specifications
+  massKg           Float?
+  heightM          Float?
+  widthM           Float?
+  lengthM          Float?
+
+  // Digital Twin Assets
+  hasModel         Boolean           @default(false)
+  modelUrl         String?
+  modelAccuracy    String            @default("GEOMETRY NOT OFFICIAL")
+  
+  // Provenance & Revision
+  verification     VerificationState @default(DATA_UNAVAILABLE)
+  sourceRef        String?
+  sourceOrg        String?
+  lastReviewed     DateTime          @default(now())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
+
+  // Relationships
+  missionId        String?
+  mission          Mission?          @relation(fields: [missionId], references: [id])
+  components       Component[]
+  
+  predecessorId    String?
+  predecessor      Artifact?         @relation("Lineage", fields: [predecessorId], references: [id])
+  successors       Artifact[]        @relation("Lineage")
+}
+
+model Mission {
+  id               String            @id @default(uuid())
+  slug             String            @unique
+  name             String
+  objective        String
+  destination      String            @default("DATA_UNAVAILABLE")
+  artifacts        Artifact[]
+}
+
+model Component {
+  id               String            @id @default(uuid())
+  name             String
+  description      String?
+  
+  artifactId       String
+  artifact         Artifact          @relation(fields: [artifactId], references: [id])
+  
+  parentId         String?
+  parent           Component?        @relation("ComponentTree", fields: [parentId], references: [id])
+  children         Component[]       @relation("ComponentTree")
+}

@@ -1,0 +1,9 @@
+{
+    "Navigation": {
+        "archive": "ARCHIVE",
+        "missions": "MISSIONS",
+        "timeline": "TIMELINE",
+        "lab": "LAB",
+        "orbital_map": "ORBITAL MAP"
+    }
+}
